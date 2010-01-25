@@ -1,6 +1,16 @@
 import Shrimp
+import Hack hiding (Response)
+import Helpers
 
-routes = [ ("/test", (\env -> Response 200 "Hello World" defaultHeaders))
-         , ("/todo", (\env -> Response 200 "TODO" defaultHeaders)) ]
+routes = [ ("/test", (\env -> 
+                        case method env of
+                            GET -> Response 200 "Got" defaultHeaders
+                            POST -> Response 200 "Posted" defaultHeaders
+                            _ -> Response 405 "Not Allowed" defaultHeaders
+                     ))
+         , ("/todo", (\env -> 
+                    case method env of
+                        GET ->
+                            Response 200 "TODO" defaultHeaders)) ]
 
-main = run 8080 routes
+main = run "localhost" 8080 routes
